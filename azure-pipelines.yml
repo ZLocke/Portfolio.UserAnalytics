@@ -11,7 +11,7 @@ variables:
   azureSubscription: '3c606739-96a8-4cb0-88b5-48e839e3fea9'
 
   # Function app name
-  functionAppName: 'zt-portfolio-api'
+  functionAppName: 'zt-portfolio-useranalytics-func'
 
   # Agent VM image name
   vmImageName: 'windows-2019'
@@ -50,9 +50,35 @@ stages:
     - publish: $(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip
       artifact: drop
 
+- stage: Provision
+  displayName: Provision stage
+  dependsOn: Build
+  condition: succeeded()
+
+  jobs:
+    - job: Provision
+      displayName: Provision
+      pool:
+        vmImage: $(vmImageName)
+        
+      steps:
+      - task: AzureResourceManagerTemplateDeployment@3
+        displayName: 'Provision Azure Function App'
+        inputs:
+            deploymentScope: 'Resource Group'
+            azureResourceManagerConnection: 'Azure subscription 1 (f084b5ba-db5f-4843-a2b3-241e6af1e274)'
+            subscriptionId: 'f084b5ba-db5f-4843-a2b3-241e6af1e274'
+            action: 'Create Or Update Resource Group'
+            resourceGroupName: 'portfolio-user-analytics-rg'
+            location: 'East US'
+            templateLocation: 'Linked artifact'
+            csmFile: '$(System.DefaultWorkingDirectory)/IaC/functionapp.json'
+            overrideParameters: '-functionAppName $(functionAppName)'
+            deploymentMode: 'Incremental'
+
 - stage: Deploy
   displayName: Deploy stage
-  dependsOn: Build
+  dependsOn: Provision
   condition: succeeded()
 
   jobs:
@@ -68,7 +94,7 @@ stages:
 
           steps:
           - task: AzureFunctionApp@1
-            displayName: 'Azure functions app deploy'
+            displayName: 'Deploy Zip File To Function App'
             inputs:
               azureSubscription: '$(azureSubscription)'
               appType: functionApp
