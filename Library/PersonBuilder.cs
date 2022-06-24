@@ -1,7 +1,5 @@
 ﻿namespace Portfolio.UserAnalytics;
-/// <summary>
-/// Faceted Builder for Person
-/// </summary>
+
 public class PersonBuilder : PersonBuilder.IPersonBuilder
 {
     // We use these nested public interfaces to expose the methods without allowing external instantiation
