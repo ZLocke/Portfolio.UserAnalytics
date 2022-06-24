@@ -52,7 +52,7 @@ public class PersonBuilder : PersonBuilder.IPersonBuilder
             this.product = product;
         }
 
-        public new IJobBuilder AsA(string job)
+        public IJobBuilder AsA(string job)
         {
             product.Job = job;
             return this;
