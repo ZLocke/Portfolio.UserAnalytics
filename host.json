@@ -1,7 +1,7 @@
 {
   "version": "2.0",
   "logging": {
-    "fileLoggingMode": "debugOnly",
+    "fileLoggingMode": "never",
     "logLevel": {
       "Function": "Information",
       "Host.Results": "Error",
@@ -10,8 +10,7 @@
     },
     "applicationInsights": {
       "samplingSettings": {
-        "isEnabled": true,
-        "excludedTypes": "Request"
+        "isEnabled": false
       }
     }
   },

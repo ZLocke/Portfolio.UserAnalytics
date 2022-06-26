@@ -9,7 +9,7 @@ public class RandomUserGenerator
     }
 
     [FunctionName("RandomUserGenerator")]
-    public void Run([TimerTrigger("0 */1 * * * *")] TimerInfo myTimer)
+    public void Run([TimerTrigger("0 */60 * * * *")] TimerInfo myTimer)
     {
         string firstName = RandomPersonData.GetRandomFirstName();
         string lastName = RandomPersonData.GetRandomLastName();
